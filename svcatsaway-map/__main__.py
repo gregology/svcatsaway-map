@@ -21,7 +21,7 @@ def collect_location():
   return response['locations'][0]
 
 def generate_body(location):
-  return '{"page": {"id": ' + options.page_id + ', "body_html": "<script>var current_location = {lat: ' + str(location['lat']) + ', lng: ' + str(location['lon']) + '};</script>"}}'
+  return '{"page": {"id": ' + options.page_id + ', "body_html": "<script>var latest_location = {lat: ' + str(location['lat']) + ', lng: ' + str(location['lon']) + ', timestamp: ' + "'" + str(location['timestamp']) + "'" + '};</script>"}}'
 
 def post_location(location):
   request_url = '/admin/pages/' + options.page_id + '.json'
