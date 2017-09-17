@@ -8,6 +8,7 @@ parser.add_option("-m", "--memair-api-key", dest="memair_api_key", help="memair 
 parser.add_option("-s", "--shopify-api-key", dest="shopify_api_key", help="shopify api key", metavar="FILE")
 parser.add_option("-p", "--shopify-api-password", dest="shopify_api_pass", help="shopify api password", metavar="FILE")
 parser.add_option("-g", "--page-id", dest="page_id", help="shopify page id", metavar="FILE")
+parser.add_option("-u", "--myshopify-url-prefix", dest="url_prefix", help="url_prefix", metavar="FILE")
 (options, args) = parser.parse_args()
 
 def collect_location():
@@ -36,7 +37,7 @@ def body_html(location):
           width: 100%;
          }}
       </style>
-      
+
       <h1 class="center">Our Current Location</h1>
       <div class="feature_divider"></div>
 
@@ -100,7 +101,7 @@ def body_html(location):
 def post_location(location):
   request_url = '/admin/pages/' + options.page_id + '.json'
   body = generate_body(location)
-  c = HTTPSConnection(host="svcatsaway.myshopify.com")
+  c = HTTPSConnection(host=(options.url_prefix + ".myshopify.com"))
   userAndPass = b64encode((options.shopify_api_key + ':' + options.shopify_api_pass).encode('UTF-8')).decode('ascii')
   headers = { 'Content-Type': 'application/json', 'Authorization' : 'Basic %s' %  userAndPass }
   c.request('PUT', request_url, headers=headers, body=body)

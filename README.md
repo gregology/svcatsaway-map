@@ -7,4 +7,4 @@ Create a Shopify maps template `page.map.liquid`
 
 git clone this repo, grab the required api keys and then
 
-`python svcatsaway-map -m MEMAIR-API-KEY -s SHOPIFY-API-KEY -p SHOPIFY-API-PASSWORD -g PAGE-ID`
+`python svcatsaway-map -m MEMAIR-API-KEY -s SHOPIFY-API-KEY -p SHOPIFY-API-PASSWORD -g PAGE-ID -u MYSHOPIFY-URL-PREFIX`
