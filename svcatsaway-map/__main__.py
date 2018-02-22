@@ -1,6 +1,7 @@
 from optparse import OptionParser
 from http.client import HTTPSConnection
 from base64 import b64encode
+import urllib.parse
 import json
 
 parser = OptionParser()
@@ -12,12 +13,14 @@ parser.add_option("-u", "--myshopify-url-prefix", dest="url_prefix", help="url_p
 (options, args) = parser.parse_args()
 
 def collect_location():
-  c = HTTPSConnection(host='memair.com')
-  headers = {"Content-type": "application/json"}
-  c.request('GET', '/api/v1/locations', json.dumps({'access_token': options.memair_api_key, 'per_page': 1}), headers)
-  content = c.getresponse()
-  response = json.loads(content.read().decode('utf8'))
-  c.close()
+  conn = HTTPSConnection(host='memair.com')
+  params = {'access_token': options.memair_api_key, 'per_page': 1}
+  url = '/api/v1/locations?' + urllib.parse.urlencode(params)
+  conn.request('GET', url)
+  content = conn.getresponse()
+  raw_response = content.read()
+  response = json.loads(raw_response.decode('utf8'))
+  conn.close()
   print(response)
   return response['locations'][0]
 
@@ -101,13 +104,13 @@ def body_html(location):
 def post_location(location):
   request_url = '/admin/pages/' + options.page_id + '.json'
   body = generate_body(location)
-  c = HTTPSConnection(host=(options.url_prefix + ".myshopify.com"))
+  conn = HTTPSConnection(host=(options.url_prefix + ".myshopify.com"))
   userAndPass = b64encode((options.shopify_api_key + ':' + options.shopify_api_pass).encode('UTF-8')).decode('ascii')
   headers = { 'Content-Type': 'application/json', 'Authorization' : 'Basic %s' %  userAndPass }
-  c.request('PUT', request_url, headers=headers, body=body)
-  res = c.getresponse()
+  conn.request('PUT', request_url, headers=headers, body=body)
+  res = conn.getresponse()
   data = res.read()
-  c.close()
+  conn.close()
   print(data)
 
 location = collect_location()
