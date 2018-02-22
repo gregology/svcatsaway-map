@@ -12,7 +12,7 @@ parser.add_option("-u", "--myshopify-url-prefix", dest="url_prefix", help="url_p
 (options, args) = parser.parse_args()
 
 def collect_location():
-  c = HTTPSConnection(host='memair.herokuapp.com')
+  c = HTTPSConnection(host='memair.com')
   headers = {"Content-type": "application/json"}
   c.request('GET', '/api/v1/locations', json.dumps({'access_token': options.memair_api_key, 'per_page': 1}), headers)
   content = c.getresponse()
