@@ -19,7 +19,7 @@ def collect_locations():
   query = '{Locations(first: 1000, order: timestamp_desc, from_timestamp: "' + one_week_ago + '") {timestamp lat lon}}'
   data = {
     'query' : query,
-    'access_token': '5c6cfea9c02565bbd28867111bd5f85839a63199daa475f201abe1098988f18a'
+    'access_token': options.memair_api_key
   }
   r = requests.post("https://memair.com/graphql", data)
   response = json.loads(r.text)
