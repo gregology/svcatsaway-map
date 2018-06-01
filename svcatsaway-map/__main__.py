@@ -15,8 +15,8 @@ parser.add_option("-u", "--myshopify-url-prefix", dest="url_prefix", help="url_p
 (options, args) = parser.parse_args()
 
 def collect_locations():
-  one_week_ago = str(datetime.utcnow() - timedelta(days=7))
-  query = '{Locations(first: 1000, order: timestamp_desc, from_timestamp: "' + one_week_ago + '") {timestamp lat lon}}'
+  four_weeks_ago = str(datetime.utcnow() - timedelta(days=28))
+  query = '{Locations(first: 10000, order: timestamp_desc, from_timestamp: "' + four_weeks_ago + '") {timestamp lat lon}}'
   data = {
     'query' : query,
     'access_token': options.memair_api_key
@@ -38,7 +38,7 @@ def body_html(locations):
 
   heat_map_points = ''
   for location in locations:
-    heat_map_points += "new google.maps.LatLng({lat}, {lon}), ".format(lat=location['lat'], lon=location['lon'])
+    heat_map_points += "new google.maps.LatLng({lat},{lon}),".format(lat=location['lat'], lon=location['lon'])
 
   return """
     <style>
@@ -107,7 +107,7 @@ def body_html(locations):
         return Math.floor(seconds) + " seconds";
       }}
 
-      document.getElementById("timestamp").innerHTML = 'Last updated ' + timeSince(new Date(Date.parse(latest_location['timestamp']))) + ' ago. Note: this map will not update when we are stationary.';
+      document.getElementById("timestamp").innerHTML = 'Last updated ' + timeSince(new Date(Date.parse(latest_location['timestamp']))) + ' ago. Note: this map will not update when we are stationary. Trailing heat map shows last 28 days of voyage.';
     </script>
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrmtrrkEdR_z0z-hNIS4l5Zxx3cX2y7vI&libraries=visualization&callback=initMap">
